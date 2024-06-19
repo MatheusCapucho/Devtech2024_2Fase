@@ -124,8 +124,8 @@ public class PlayerManager : MonoBehaviour
     {
         if(other.collider.CompareTag("Ground") || other.collider.CompareTag("Box"))
         {
-            RaycastHit2D hitL = Physics2D.Raycast(transform.position - new Vector3(0.5f, 0f, 0f), -transform.up, .55f, groundMask);
-            RaycastHit2D hitR = Physics2D.Raycast(transform.position + new Vector3(0.5f, 0f, 0f), -transform.up, .55f, groundMask);
+            RaycastHit2D hitL = Physics2D.Raycast(transform.position - new Vector3(0.44f, 0f, 0f), -transform.up, .55f, groundMask);
+            RaycastHit2D hitR = Physics2D.Raycast(transform.position + new Vector3(0.44f, 0f, 0f), -transform.up, .55f, groundMask);
 
             if ((hitL.collider != null || hitR.collider != null))
             {
