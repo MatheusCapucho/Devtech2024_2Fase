@@ -53,11 +53,11 @@ public class PlayerManager : MonoBehaviour
 
         if (!_isGrounded)
             return;
-
         Vector2 dir = ctx.ReadValue<Vector2>();
         if (dir == Vector2.zero || dir.y != 0f)
             return;
         _lastInputDirection = Mathf.Round(dir.x);
+        CheckAndMoveBoxes();
         _inputTransform.position = transform.position + (Vector3)dir;
         _inputTransform.position = Vector3Int.FloorToInt(_inputTransform.position);
         var positionToInt = transform.position + (Vector3)dir;
@@ -76,25 +76,19 @@ public class PlayerManager : MonoBehaviour
     private void Update()
     {
         CheckForMovement();
-        CheckAndMoveBoxes();
+        
     }
 
     private void CheckAndMoveBoxes()
     {
-        RaycastHit2D hitL = Physics2D.Raycast(transform.position, -transform.right, .6f, boxMask);
-        RaycastHit2D hitR = Physics2D.Raycast(transform.position, transform.right, .6f, boxMask);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right * _lastInputDirection, .6f, boxMask);
 
-        if ((hitL.collider != null || hitR.collider != null))
+        if (hit.collider != null)
         {
-            if (hitL.collider != null)
-            {
-                hitL.collider.gameObject.GetComponent<Box>().Move(-1);
-            }
-            else
-            {
-                hitR.collider.gameObject.GetComponent<Box>().Move(1);
-            }
+            hit.collider.gameObject.GetComponent<Box>().Move(_lastInputDirection);
         }
+          
+        
     }
 
     private void CheckForMovement()
@@ -135,6 +129,7 @@ public class PlayerManager : MonoBehaviour
                 else
                     _targetPosition = Vector3Int.FloorToInt(transform.position);
                 _inputTransform.position = _targetPosition;
+
             }
         }
       
