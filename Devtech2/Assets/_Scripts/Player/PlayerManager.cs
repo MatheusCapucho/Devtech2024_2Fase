@@ -11,8 +11,8 @@ public class PlayerManager : MonoBehaviour
     private PlayerControls _input;
 
     private Transform _inputTransform;
-    private Vector3 _targetPosition;
-    private bool _isGrounded = true;
+    private Vector3Int _targetPosition;
+    private bool _isGrounded = false;
 
     [SerializeField]
     private float _speed;
@@ -24,7 +24,6 @@ public class PlayerManager : MonoBehaviour
         _input = new PlayerControls();
         _input.Enable();
         _inputTransform = transform.GetChild(0);
-        _targetPosition = transform.position;
     }
     private void OnEnable()
     {
@@ -42,7 +41,7 @@ public class PlayerManager : MonoBehaviour
     private void OnMove(InputAction.CallbackContext ctx)
     {
 
-        if (!IsGrounded())
+        if (!_isGrounded)
             return;
 
         Vector2 dir = ctx.ReadValue<Vector2>();
@@ -50,7 +49,8 @@ public class PlayerManager : MonoBehaviour
             return;
 
         _inputTransform.position = transform.position + (Vector3)dir;
-        _targetPosition = transform.position + (Vector3)dir;
+        var positionToInt = transform.position + (Vector3)dir;
+        _targetPosition = Vector3Int.FloorToInt(positionToInt);
     }
 
 
@@ -65,26 +65,34 @@ public class PlayerManager : MonoBehaviour
 
     private void CheckForMovement()
     {
-        if (IsGrounded())
-            transform.position = Vector3.Lerp(transform.position, _targetPosition, Time.deltaTime * _speed);
-        else
-            _targetPosition = transform.position;
+        if (_isGrounded)
+            transform.position = Vector3.MoveTowards(transform.position, _targetPosition, Time.deltaTime * _speed);
 
-    }
-
-    private bool IsGrounded()
-    {
-        RaycastHit2D hitL = Physics2D.Raycast(transform.position - new Vector3(0.6f, 0f, 0f), -transform.up, .55f, groundMask);
-        RaycastHit2D hitR = Physics2D.Raycast(transform.position + new Vector3(0.6f, 0f, 0f), -transform.up, .55f, groundMask);
-
-        if ((hitL.collider != null || hitR.collider != null))
-            return true;
-
-        return false;
     }
 
     private void PlaceBlock()
     {
 
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        RaycastHit2D hitL = Physics2D.Raycast(transform.position - new Vector3(0.4f, 0f, 0f), -transform.up, .55f, groundMask);
+        RaycastHit2D hitR = Physics2D.Raycast(transform.position + new Vector3(0.4f, 0f, 0f), -transform.up, .55f, groundMask);
+
+        if ((hitL.collider != null || hitR.collider != null))
+        {
+            _isGrounded = true;
+            _targetPosition = Vector3Int.FloorToInt( transform.position);
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        RaycastHit2D hitL = Physics2D.Raycast(transform.position - new Vector3(0.4f, 0f, 0f), -transform.up, .55f, groundMask);
+        RaycastHit2D hitR = Physics2D.Raycast(transform.position + new Vector3(0.4f, 0f, 0f), -transform.up, .55f, groundMask);
+
+        if ((hitL.collider == null || hitR.collider == null))
+            _isGrounded = false;
     }
 }
