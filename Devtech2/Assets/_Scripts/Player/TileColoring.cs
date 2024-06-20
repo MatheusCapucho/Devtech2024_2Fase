@@ -10,7 +10,7 @@ public class TileColoring : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private Tile _virusTile;
     [SerializeField] private int _maxColors = 99;
-
+    [SerializeField] private bool _isPlayerRelated = true;
     private void Awake()
     {
         tilemap = GameObject.Find("Ground").GetComponent<Tilemap>();
@@ -32,8 +32,14 @@ public class TileColoring : MonoBehaviour
         if(tilemap.GetSprite(hitPoint) != _virusTile.sprite && _maxColors > 0)
         {
             tilemap.SetTile(hitPoint, _virusTile);
-            GameManager.VirusTiles++;
-            _maxColors--; 
+            if(_isPlayerRelated)
+            {
+                GameManager.VirusTiles++;
+                _maxColors--; 
+            } else
+            {
+                GameManager.VirusTiles--;
+            }
             if(_maxColors <= 0)
             {
 

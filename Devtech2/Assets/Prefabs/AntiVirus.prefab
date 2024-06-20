@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1911615482260078991}
   - component: {fileID: 1581330394751784130}
   - component: {fileID: 212499072628062383}
+  - component: {fileID: 7689223087468516104}
   m_Layer: 0
   m_Name: AntiVirus
   m_TagString: Enemy
@@ -151,7 +152,29 @@ MonoBehaviour:
   boxMask:
     serializedVersion: 2
     m_Bits: 128
-  _startingDirection: -1
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _startingDirection: 1
+--- !u!114 &7689223087468516104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5137174791427433283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7abe44b58a6aea34fabe387a5181ce26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilemap: {fileID: 0}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
+  _virusTile: {fileID: 11400000, guid: 4ec2c774145e7d34c8c4b4daec65551a, type: 2}
+  _maxColors: 99
+  _isPlayerRelated: 0
 --- !u!1 &6841925211578247906
 GameObject:
   m_ObjectHideFlags: 0
