@@ -11,9 +11,17 @@ public class Main_Menu : MonoBehaviour
 
     public void Play()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
+        if(SceneManager.GetActiveScene().buildIndex + 1 < SceneManager.sceneCount)
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
+        else
+            GoMainMenu();
 
 
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void Sair()

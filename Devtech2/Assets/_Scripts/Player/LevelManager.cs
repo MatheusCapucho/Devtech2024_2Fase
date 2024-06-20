@@ -47,8 +47,12 @@ public class LevelManager : MonoBehaviour
             {
                 endedGame = true;
                 DestroyEnemies();
+                var panel = GameObject.Find("OverlayCanvas").transform.GetChild(0).gameObject;
+                panel.SetActive(true);
                 if (GameManager.VirusTiles >= tilesNeededToWin)
-                    Debug.Log("win");
+                    panel.transform.GetChild(0).gameObject.SetActive(true);
+                else
+                    panel.transform.GetChild(1).gameObject.SetActive(true);
 
             }
         }
