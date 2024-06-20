@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
+
 
 public class PlayerManager : MonoBehaviour
 {
@@ -12,7 +9,7 @@ public class PlayerManager : MonoBehaviour
 
     private Transform _inputTransform;
     private Vector3Int _targetPosition;
-    private float _lastInputDirection;
+    private Vector2 _lastInputDirection;
     private bool _isGrounded = false;
 
     [SerializeField]
@@ -50,13 +47,12 @@ public class PlayerManager : MonoBehaviour
 
     private void OnMove(InputAction.CallbackContext ctx)
     {
-
         if (!_isGrounded)
             return;
         Vector2 dir = ctx.ReadValue<Vector2>();
         if (dir == Vector2.zero || dir.y != 0f)
             return;
-        _lastInputDirection = Mathf.Round(dir.x);
+        _lastInputDirection = dir;
         CheckAndMoveBoxes();
         _inputTransform.position = transform.position + (Vector3)dir;
         _inputTransform.position = Vector3Int.FloorToInt(_inputTransform.position);
@@ -75,17 +71,44 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        CheckGround();
         CheckForMovement();
-        
+    }
+
+    private void CheckGround()
+    {
+        RaycastHit2D hitL = Physics2D.Raycast(transform.position - new Vector3(0.44f, 0f, 0f), -transform.up, .55f, groundMask);
+        RaycastHit2D hitR = Physics2D.Raycast(transform.position + new Vector3(0.44f, 0f, 0f), -transform.up, .55f, groundMask);
+
+        if ((hitL.collider != null || hitR.collider != null))
+        {
+            if (transform.position.x % 1 < 0.5f)
+                _targetPosition = Vector3Int.CeilToInt(transform.position);
+            else
+                _targetPosition = Vector3Int.FloorToInt(transform.position);
+
+            //_inputTransform.position = _targetPosition;
+            _isGrounded = true;
+
+        } else
+        {
+            if (transform.position.x % 1 > 0.5f)
+                _targetPosition = Vector3Int.CeilToInt(transform.position + Vector3.down * .55f);
+            else
+                _targetPosition = Vector3Int.FloorToInt(transform.position + Vector3.down * .55f);
+
+            _inputTransform.position = _targetPosition + Vector3.up;
+            _isGrounded = false;
+        }
     }
 
     private void CheckAndMoveBoxes()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right * _lastInputDirection, .6f, boxMask);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right * _lastInputDirection.x, .6f, boxMask);
 
         if (hit.collider != null)
         {
-            hit.collider.gameObject.GetComponent<Box>().Move(_lastInputDirection);
+            hit.collider.gameObject.GetComponent<Box>().Move(_lastInputDirection.x);
         }
           
         
@@ -93,8 +116,21 @@ public class PlayerManager : MonoBehaviour
 
     private void CheckForMovement()
     {
+
+        if (PathIsBlocked() && _isGrounded)
+            return;
+
         if (_isGrounded)
-            transform.position = Vector3.MoveTowards(transform.position, _targetPosition, Time.deltaTime * _speed);
+        {
+            transform.position = Vector3.MoveTowards(transform.position, _inputTransform.position, Time.deltaTime * _speed);
+
+        }
+        else
+        {
+            transform.position = Vector3.MoveTowards(transform.position, transform.position + Vector3.down * Time.deltaTime * _speed, Time.deltaTime * _speed);
+            _lastInputDirection = Vector2.down;
+
+        }
 
         if (transform.position == _targetPosition)
             _isMoving = false;
@@ -105,46 +141,25 @@ public class PlayerManager : MonoBehaviour
 
     }
 
+    private bool PathIsBlocked()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(_inputTransform.position, _lastInputDirection, .1f, groundMask);
+
+        if (hit.collider != null)
+        {
+            return true;
+        }
+        return false;
+    }
+
     private void PlaceBlock()
     {
         if (_isMoving)
             return;
         if (!_isGrounded)
             return;
-        Instantiate(_blockPrefab, transform.position + Vector3.right * _lastInputDirection, transform.rotation, null);
+        Instantiate(_blockPrefab, transform.position + Vector3.right * _lastInputDirection.x, transform.rotation, null);
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if(other.collider.CompareTag("Ground") || other.collider.CompareTag("Box"))
-        {
-            RaycastHit2D hitL = Physics2D.Raycast(transform.position - new Vector3(0.44f, 0f, 0f), -transform.up, .55f, groundMask);
-            RaycastHit2D hitR = Physics2D.Raycast(transform.position + new Vector3(0.44f, 0f, 0f), -transform.up, .55f, groundMask);
-
-            if ((hitL.collider != null || hitR.collider != null))
-            {
-                _isGrounded = true;
-                if(transform.position.x % 1 < 0.5f)
-                    _targetPosition = Vector3Int.CeilToInt(transform.position);
-                else
-                    _targetPosition = Vector3Int.FloorToInt(transform.position);
-                _inputTransform.position = _targetPosition;
-
-            }
-        }
-      
-    }
-
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        if (other.collider.CompareTag("Ground") || other.collider.CompareTag("Box"))
-        {
-            RaycastHit2D hitL = Physics2D.Raycast(transform.position - new Vector3(0.5f, 0f, 0f), -transform.up, .55f, groundMask);
-            RaycastHit2D hitR = Physics2D.Raycast(transform.position + new Vector3(0.5f, 0f, 0f), -transform.up, .55f, groundMask);
-
-            if ((hitL.collider == null || hitR.collider == null))
-                _isGrounded = false;
-        }
-        
-    }
+   
 }

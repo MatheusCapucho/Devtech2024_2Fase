@@ -17,7 +17,7 @@ public class InputTransform : MonoBehaviour
 
     private void CheckDistance()
     {
-        if (Vector3.Distance(playerTransform.position, transform.position) > 1.1f)
-            transform.position = playerTransform.position;
+        //if (Vector3.Distance(playerTransform.position, transform.position) > 1.05f)
+            //transform.position = playerTransform.position;
     }
 }
