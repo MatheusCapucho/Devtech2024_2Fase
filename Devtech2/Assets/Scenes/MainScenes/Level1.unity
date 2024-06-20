@@ -145,6 +145,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _virusTile: {fileID: 11400000, guid: a625ca095431ad949bc1b6a72ad34a55, type: 2}
+  _maxColors: 10
 --- !u!1 &656227679
 GameObject:
   m_ObjectHideFlags: 0

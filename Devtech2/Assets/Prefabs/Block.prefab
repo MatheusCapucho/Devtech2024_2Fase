@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5099711629833977318}
   - component: {fileID: 3321825011374950098}
   - component: {fileID: 3453541030737068579}
+  - component: {fileID: -7363300732854437722}
   m_Layer: 7
   m_Name: Block
   m_TagString: Box
@@ -146,3 +147,20 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 64
+--- !u!114 &-7363300732854437722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4303398605212561898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7abe44b58a6aea34fabe387a5181ce26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilemap: {fileID: 0}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
+  _virusTile: {fileID: 11400000, guid: a625ca095431ad949bc1b6a72ad34a55, type: 2}
