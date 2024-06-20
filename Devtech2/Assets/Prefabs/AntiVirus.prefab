@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 1911615482260078991}
   - component: {fileID: 1581330394751784130}
   - component: {fileID: 212499072628062383}
-  m_Layer: 0
+  - component: {fileID: 7689223087468516104}
+  m_Layer: 6
   m_Name: AntiVirus
   m_TagString: Enemy
   m_Icon: {fileID: 0}
