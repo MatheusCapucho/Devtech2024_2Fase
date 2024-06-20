@@ -64,7 +64,7 @@ public class AntivirusMovement : MonoBehaviour
 
         if (hit.collider != null)
         {
-            hit.collider.gameObject.GetComponent<Box>().Move(_lastDirection);
+            hit.collider.gameObject.GetComponent<Box>().Move(new Vector2(_lastDirection, 0f));
             Flip();
         }
     }
