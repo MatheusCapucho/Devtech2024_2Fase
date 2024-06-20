@@ -24,7 +24,10 @@ public class TileColoring : MonoBehaviour
         var hitPoint = tilemap.WorldToCell(hit.point) + Vector3Int.down;
 
         if(!tilemap.GetSprite(hitPoint) != _virusTile.sprite)
+        {
+
             tilemap.SetTile(hitPoint, _virusTile);
+        }
         
 
     }
