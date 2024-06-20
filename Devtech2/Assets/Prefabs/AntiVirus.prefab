@@ -151,6 +151,9 @@ MonoBehaviour:
   boxMask:
     serializedVersion: 2
     m_Bits: 128
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 256
   _startingDirection: -1
 --- !u!1 &6841925211578247906
 GameObject:
