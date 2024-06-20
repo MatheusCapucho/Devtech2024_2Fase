@@ -11,7 +11,7 @@ public class Main_Menu : MonoBehaviour
 
     public void Play()
     {
-        if(SceneManager.GetActiveScene().buildIndex + 1 < SceneManager.sceneCount)
+        if(SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCount)
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
         else
             GoMainMenu();

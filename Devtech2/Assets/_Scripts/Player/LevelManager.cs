@@ -30,6 +30,7 @@ public class LevelManager : MonoBehaviour
         player.GetComponent<TileColoring>().SetMaxColors(tilesAvaibleToPaint);
         _objectiveTilesText.text = "OBJECTIVE: " + tilesNeededToWin;
         ChangeUITimer(enemyTimer);
+        GameManager.VirusTiles = 0;
     }
     void Update()
     {
