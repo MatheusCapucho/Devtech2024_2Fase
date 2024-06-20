@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AntivirusMovement : MonoBehaviour
@@ -9,6 +7,7 @@ public class AntivirusMovement : MonoBehaviour
     private bool _isGrounded = false;
     private bool _isMoving = false;
     private float _lastDirection;
+
     private Vector2 _dir;
     private Vector3Int _targetPosition;
 
@@ -18,12 +17,16 @@ public class AntivirusMovement : MonoBehaviour
     [SerializeField] private float _speed = 4.0f;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask boxMask;
+    [SerializeField] private LayerMask wallMask;
+
+    [Header("Apenas -1 ou 1")]
+    [SerializeField] private int _startingDirection = 1;
 
     // Start is called before the first frame update
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _dir = Vector2.right;
+        _dir = Vector2.right * _startingDirection;
         _movementTransform = transform.GetChild(0);
         _movementTransform.parent = null;
     }
@@ -44,6 +47,7 @@ public class AntivirusMovement : MonoBehaviour
             return;
         _lastDirection = Mathf.Round(_dir.x);
         CheckAndMoveBoxes();
+        CheckWalls();
         _movementTransform.position = transform.position + (Vector3)_dir;
         _movementTransform.position = Vector3Int.FloorToInt(_movementTransform.position);
         var positionToInt = transform.position + (Vector3)_dir;
@@ -72,16 +76,6 @@ public class AntivirusMovement : MonoBehaviour
         return;
     }
 
-    private void MoveDown()
-    {
-        // Define a velocidade de queda
-        float fallSpeed = 5.0f;
-        // Calcula a nova posição para baixo
-        Vector3 downPosition = transform.position + Vector3.down * Time.deltaTime * fallSpeed;
-        // Move o objeto para a nova posição
-        transform.position = Vector3.MoveTowards(transform.position, downPosition, Time.deltaTime * fallSpeed);
-    }
-
     private void CheckAndMoveBoxes()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right * _lastDirection, .6f, boxMask);
@@ -89,6 +83,16 @@ public class AntivirusMovement : MonoBehaviour
         if (hit.collider != null)
         {
             hit.collider.gameObject.GetComponent<Box>().Move(new Vector2(_lastDirection, 0f));
+            Flip();
+        }
+    }
+
+    private void CheckWalls()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right * _lastDirection, .6f, wallMask);
+
+        if (hit.collider != null)
+        {
             Flip();
         }
     }
