@@ -69,10 +69,14 @@ public class PlayerManager : MonoBehaviour
         PlaceBlock();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         CheckGround();
         CheckForMovement();
+    }
+    private void Update()
+    {
+       
     }
 
     private void CheckGround()
@@ -82,10 +86,10 @@ public class PlayerManager : MonoBehaviour
 
         if ((hitL.collider != null || hitR.collider != null))
         {
-            if (transform.position.x % 1 < 0.5f)
-                _targetPosition = Vector3Int.CeilToInt(transform.position);
-            else
+            if (transform.position.x % 1 <= 0.5f)
                 _targetPosition = Vector3Int.FloorToInt(transform.position);
+            else
+                _targetPosition = Vector3Int.CeilToInt(transform.position);
 
             //_inputTransform.position = _targetPosition;
             _isGrounded = true;
@@ -108,7 +112,7 @@ public class PlayerManager : MonoBehaviour
 
         if (hit.collider != null)
         {
-            hit.collider.gameObject.GetComponent<Box>().Move(_lastInputDirection.x);
+            hit.collider.gameObject.GetComponent<Box>().Move(_lastInputDirection);
         }
           
         
@@ -122,12 +126,12 @@ public class PlayerManager : MonoBehaviour
 
         if (_isGrounded)
         {
-            transform.position = Vector3.MoveTowards(transform.position, _inputTransform.position, Time.deltaTime * _speed);
+            transform.position = Vector3.MoveTowards(transform.position, _inputTransform.position, Time.fixedDeltaTime * _speed);
 
         }
         else
         {
-            transform.position = Vector3.MoveTowards(transform.position, transform.position + Vector3.down * Time.deltaTime * _speed, Time.deltaTime * _speed);
+            transform.position = Vector3.MoveTowards(transform.position, transform.position + Vector3.down * Time.deltaTime * _speed, Time.fixedDeltaTime * _speed);
             _lastInputDirection = Vector2.down;
 
         }

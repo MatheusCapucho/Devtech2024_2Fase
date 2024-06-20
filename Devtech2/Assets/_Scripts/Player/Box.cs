@@ -1,14 +1,18 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Box : MonoBehaviour
 {
     private bool _isMoving = false;
+    private bool _isMovingDown = false;
     private bool _isGrounded = true;
     private Vector3 _targetPosition;
     [SerializeField] LayerMask groundMask;
+
+    private Tilemap tilemap;
+
+    private Vector2 _direction = Vector2.zero;
 
     private void Awake()
     {
@@ -16,33 +20,72 @@ public class Box : MonoBehaviour
         _isMoving = false;
         _isGrounded = true;
     }
-    public void Move(float dir)
+    public void Move(Vector2 dir)
     {
         _isMoving = true;
-        _targetPosition = transform.position + new Vector3(dir, 0f, 0f);
+        if(_direction != Vector2.down)
+            _direction = new Vector3(dir.x, dir.y, 0f);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + Vector3.up * .2f, _direction, 20f, groundMask);
+        Vector3Int targetOffset = Vector3Int.CeilToInt(new Vector3(dir.x, dir.y, 0f));
+
+
+        if(hit.collider != null)
+        {
+            tilemap = hit.collider.GetComponent<Tilemap>();
+            var hitPoint = tilemap.WorldToCell(hit.point);
+            if(hitPoint.x > transform.position.x)
+            {
+                targetOffset = Vector3Int.FloorToInt(new Vector3(hitPoint.x - transform.position.x, 0f, 0f));
+            }
+            else
+            if(hitPoint.x < transform.position.x)
+            {
+                targetOffset = Vector3Int.FloorToInt(new Vector3(hitPoint.x - transform.position.x + 1f, 0f, 0f));
+            }
+        } else
+        {
+            targetOffset = Vector3Int.CeilToInt(_direction * 100f);
+        }
+        _targetPosition +=  targetOffset;
+        _isMovingDown = true;
        
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         CheckGround();
 
 
-        if (_isMoving)
+        CheckAndMove();
+
+
+    }
+
+    private void CheckAndMove()
+    {
+        if (_isMoving && _isGrounded)
         {
-            transform.position = Vector3.MoveTowards(transform.position, _targetPosition, Time.deltaTime * 15f);
             if (transform.position == _targetPosition)
             {
-                _isMoving = false;
+                if (_direction != Vector2.zero && _isGrounded)
+                    Move(_direction);
+                else
+                    _isMoving = false;
             }
+            if(_targetPosition.y < transform.position.y)
+                _targetPosition.y = transform.position.y;
+
+            transform.position = Vector3.MoveTowards(transform.position, _targetPosition, Time.fixedDeltaTime * 15f);
         }
         else
-        if (!_isGrounded && !_isMoving)
+        if (!_isGrounded)
         {
-            transform.position += Vector3.down * Time.deltaTime * 15f;
+
+            if (_isMovingDown)
+                transform.position += 15f * Time.fixedDeltaTime * Vector3.down;
+
+            //transform.position = Vector3.MoveTowards(transform.position, _targetPosition, Time.deltaTime * 15f);
         }
-
-
     }
 
     private void CheckGround()
@@ -52,6 +95,13 @@ public class Box : MonoBehaviour
 
         if ((hitL.collider != null || hitR.collider != null))
         {
+            if(!_isGrounded)
+            {
+                if (transform.position.x % 1 < 0.5f)
+                    _targetPosition = Vector3Int.FloorToInt(transform.position - new Vector3(.1f, .1f, 0f));
+                else
+                    _targetPosition = Vector3Int.CeilToInt(transform.position + new Vector3(.1f, .1f, 0f));
+            }
             _isGrounded = true;
         } 
         else
