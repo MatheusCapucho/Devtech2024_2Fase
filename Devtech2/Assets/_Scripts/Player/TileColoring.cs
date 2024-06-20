@@ -11,6 +11,11 @@ public class TileColoring : MonoBehaviour
     [SerializeField] private Tile _virusTile;
     [SerializeField] private int _maxColors = 99;
     [SerializeField] private bool _isPlayerRelated = true;
+
+    public void SetMaxColors(int max)
+    {
+        _maxColors = max;
+    }
     private void Awake()
     {
         tilemap = GameObject.Find("Ground").GetComponent<Tilemap>();
