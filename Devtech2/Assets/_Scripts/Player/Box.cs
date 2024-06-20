@@ -35,7 +35,7 @@ public class Box : MonoBehaviour
             var hitPoint = tilemap.WorldToCell(hit.point);
             if(hitPoint.x > transform.position.x)
             {
-                targetOffset = Vector3Int.FloorToInt(new Vector3(hitPoint.x - transform.position.x, 0f, 0f));
+                targetOffset = Vector3Int.CeilToInt(new Vector3(hitPoint.x - transform.position.x, 0f, 0f));
             }
             else
             if(hitPoint.x < transform.position.x)
@@ -98,9 +98,9 @@ public class Box : MonoBehaviour
             if(!_isGrounded)
             {
                 if (transform.position.x % 1 < 0.5f)
-                    _targetPosition = Vector3Int.FloorToInt(transform.position - new Vector3(.1f, .1f, 0f));
+                    _targetPosition = Vector3Int.FloorToInt(transform.position);
                 else
-                    _targetPosition = Vector3Int.CeilToInt(transform.position + new Vector3(.1f, .1f, 0f));
+                    _targetPosition = Vector3Int.CeilToInt(transform.position);
             }
             _isGrounded = true;
         } 
