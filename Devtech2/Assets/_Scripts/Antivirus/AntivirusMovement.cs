@@ -62,7 +62,7 @@ public class AntivirusMovement : MonoBehaviour
     {
         if (_isGrounded)
         {
-            Debug.Log("MEXEU");
+            //Debug.Log("MEXEU");
             transform.position = Vector3.MoveTowards(transform.position, _movementTransform.position, Time.deltaTime * _speed);
         }
         else
@@ -104,6 +104,7 @@ public class AntivirusMovement : MonoBehaviour
 
         if ((hitL.collider != null || hitR.collider != null))
         {
+            Debug.Log("A");
             if (transform.position.x % 1 <= 0.5f)
                 _targetPosition = Vector3Int.FloorToInt(transform.position);
             else

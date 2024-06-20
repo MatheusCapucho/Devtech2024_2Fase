@@ -1288,14 +1288,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 212499072628062383, guid: 7e11c9372c5a696439fe0ad0f23d82c2, type: 3}
-      propertyPath: _speed
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 212499072628062383, guid: 7e11c9372c5a696439fe0ad0f23d82c2, type: 3}
-      propertyPath: wallMask.m_Bits
-      value: 256
-      objectReference: {fileID: 0}
     - target: {fileID: 2068798526612544725, guid: 7e11c9372c5a696439fe0ad0f23d82c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2
@@ -1340,10 +1332,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: AntiVirus
       objectReference: {fileID: 0}
-    - target: {fileID: 6841925211578247906, guid: 7e11c9372c5a696439fe0ad0f23d82c2, type: 3}
-      propertyPath: m_Icon
-      value: 
-      objectReference: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
